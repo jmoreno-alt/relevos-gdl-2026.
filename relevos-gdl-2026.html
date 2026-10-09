@@ -1,0 +1,385 @@
+<title>Relevos Maratón Guadalajara 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: una columna estilo hoja de inscripción; dorsales como marcadores de lugar en cada equipo */
+:root{
+  --bg:#f3f2f7; --surface:#ffffff; --sunk:#ebe9f2; --fg:#1d1a2b; --muted:#5f5a74; --line:#d6d2e3;
+  --accent:#5b3fa8; --accent-fg:#ffffff; --accent-soft:#ece6fb;
+  --ok:#1f7a4d; --ok-soft:#e1f3e9; --warn:#9a5b00; --warn-soft:#fbefd9; --bad:#b3261e; --bad-soft:#fbe4e2;
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#15131d; --surface:#1e1b29; --sunk:#262233; --fg:#ece9f6; --muted:#a49fba; --line:#373149;
+  --accent:#b39cf2; --accent-fg:#1a1428; --accent-soft:#2e2645;
+  --ok:#6fd3a0; --ok-soft:#163327; --warn:#f0bd6a; --warn-soft:#3a2c12; --bad:#f2a49e; --bad-soft:#3d1c1a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#15131d; --surface:#1e1b29; --sunk:#262233; --fg:#ece9f6; --muted:#a49fba; --line:#373149;
+  --accent:#b39cf2; --accent-fg:#1a1428; --accent-soft:#2e2645;
+  --ok:#6fd3a0; --ok-soft:#163327; --warn:#f0bd6a; --warn-soft:#3a2c12; --bad:#f2a49e; --bad-soft:#3d1c1a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:16px/1.5 var(--body);padding-inline:16px;padding-block:24px 64px}
+.wrap{max-width:880px;margin:0 auto;display:grid;gap:28px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.05;letter-spacing:.01em}
+h1{font-size:clamp(2.2rem,6vw,3.4rem);font-weight:800;text-transform:uppercase}
+h2{font-size:1.7rem;font-weight:700;text-transform:uppercase}
+h3{font-size:1.3rem;font-weight:700;text-transform:uppercase}
+p{margin:0}
+.eyebrow{font:600 .78rem/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.muted{color:var(--muted)}
+header{display:grid;gap:10px}
+.facts{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:.95rem;color:var(--muted)}
+.facts b{color:var(--fg);font-variant-numeric:tabular-nums}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:grid;gap:16px;min-width:0}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px 16px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.field{display:grid;gap:4px;min-width:0}
+.wide{grid-column:1/-1}
+label,.lbl{font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.req{color:var(--accent)}
+input,select,textarea{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:9px 10px;width:100%;min-width:0}
+textarea{font:500 .78rem/1.4 var(--mono);height:120px;resize:vertical}
+input:focus-visible,select:focus-visible,button:focus-visible,textarea:focus-visible,.pick:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+input.invalid,select.invalid{border-color:var(--bad);background:var(--bad-soft)}
+.err{font-size:.82rem;color:var(--bad)}
+.dob{display:grid;grid-template-columns:1.1fr 1.5fr 1fr;gap:6px}
+.sub{font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);grid-column:1/-1;margin-top:4px}
+.picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.pick{position:relative;border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:8px;cursor:pointer;background:var(--bg)}
+.pick input{position:absolute;opacity:0;pointer-events:none}
+.pick:has(input:checked){border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
+.pick.full{cursor:not-allowed;opacity:.6}
+.pick .name{font:700 1.5rem/1 var(--display);text-transform:uppercase}
+.slots{display:flex;gap:6px}
+.slot{font:500 .8rem/1 var(--mono);border:1px solid var(--line);border-radius:4px;padding:6px 7px;min-width:38px;text-align:center;color:var(--muted)}
+.slot.taken{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.team{border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:12px;min-width:0}
+.bib{font:500 1rem/1 var(--mono);background:var(--fg);color:var(--bg);border-radius:4px;padding:7px 9px;min-width:44px;text-align:center;display:inline-block}
+button{font:700 .95rem/1 var(--body);border-radius:6px;padding:11px 16px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+button.danger{color:var(--bad);border-color:var(--bad)}
+button.link{border:0;background:none;padding:4px 0;color:var(--accent);text-decoration:underline;font-weight:600}
+button:disabled{opacity:.5;cursor:not-allowed}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.notice{border-radius:8px;padding:12px 14px;font-size:.95rem}
+.notice.ok{background:var(--ok-soft);color:var(--ok)}
+.notice.bad{background:var(--bad-soft);color:var(--bad)}
+.notice.warn{background:var(--warn-soft);color:var(--warn)}
+.notice.info{background:var(--accent-soft);color:var(--fg)}
+.notice ul,.notice ol{margin:6px 0 0;padding-left:20px}
+.tablebox{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;font-weight:700}
+th,td{padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.num{font-variant-numeric:tabular-nums}
+.chip{display:inline-block;font-size:.78rem;font-weight:700;border-radius:999px;padding:3px 10px;white-space:nowrap}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chip.acc{background:var(--accent-soft);color:var(--accent)}
+.empty{border:1px dashed var(--line);border-radius:8px;padding:16px;color:var(--muted)}
+.fill{border-top:1px solid var(--line);padding-top:12px;display:grid;gap:10px}
+.fill ol{margin:0;padding-left:20px;display:grid;gap:4px}
+code{font:500 .85em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:4px}
+@media (prefers-reduced-motion:no-preference){.pick,button{transition:background .15s,border-color .15s}}
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Maratón Guadalajara 2026 · Inscripción por equipos</span>
+    <h1>Relevos: registro de integrantes</h1>
+    <p class="muted" style="max-width:65ch">Elige tu equipo y captura tus datos. Son los mismos que pide el portal oficial de inscripciones. Cada persona se registra una sola vez y en un solo equipo.</p>
+    <div class="facts"><span>Integrantes por equipo: <b>4</b></span><span>Campos con <b style="color:var(--accent)">*</b> son obligatorios</span></div>
+  </header>
+
+  <div id="status" class="notice warn" hidden></div>
+
+  <!-- ===== Panel del organizador ===== -->
+  <section id="ownerPanel" class="panel" hidden>
+    <div class="row"><h2>Panel del organizador</h2><span class="muted" style="font-size:.9rem">Solo tú ves esta sección</span></div>
+    <div class="two" id="teamConfig"></div>
+    <div id="ownerTeams" style="display:grid;gap:16px"></div>
+  </section>
+
+  <!-- ===== Ya registrado ===== -->
+  <section id="doneBox" class="panel" hidden></section>
+
+  <!-- ===== Formulario del integrante ===== -->
+  <form id="form" class="panel" novalidate hidden>
+    <h2>1 · Elige tu equipo</h2>
+    <div class="picks" id="picks"></div>
+    <div class="err" data-for="equipo"></div>
+
+    <h2 style="margin-top:8px">2 · Tus datos</h2>
+    <div class="grid">
+      <div class="field"><label for="nombre">Nombre(s) <span class="req">*</span></label><input id="nombre" autocomplete="given-name"><div class="err" data-for="nombre"></div></div>
+      <div class="field"><label for="paterno">Apellido paterno <span class="req">*</span></label><input id="paterno"><div class="err" data-for="paterno"></div></div>
+      <div class="field"><label for="materno">Apellido materno <span class="req">*</span></label><input id="materno"><div class="err" data-for="materno"></div></div>
+      <div class="field"><label for="sexo">Género <span class="req">*</span></label><select id="sexo"><option value="">Selecciona…</option><option value="female">FEMENINO</option><option value="male">MASCULINO</option></select><div class="err" data-for="sexo"></div></div>
+      <div class="field"><label for="anio">Fecha de nacimiento <span class="req">*</span></label><div class="dob"><select id="anio" aria-label="Año"></select><select id="mes" aria-label="Mes"></select><select id="dia" aria-label="Día"></select></div><div class="err" data-for="anio"></div></div>
+      <div class="field"><label for="telefono">Teléfono (10 dígitos) <span class="req">*</span></label><input id="telefono" inputmode="tel" maxlength="10"><div class="err" data-for="telefono"></div></div>
+      <div class="field"><label for="correo">Email <span class="req">*</span></label><input id="correo" type="email"><div class="err" data-for="correo"></div></div>
+      <div class="field"><label for="correo2">Confirma el email <span class="req">*</span></label><input id="correo2" type="email"><div class="err" data-for="correo2"></div></div>
+      <div class="field"><label for="estado">Estado de residencia <span class="req">*</span></label><select id="estado"></select><div class="err" data-for="estado"></div></div>
+      <div class="field"><label for="cp">Código postal de residencia <span class="req">*</span></label><input id="cp" inputmode="numeric" maxlength="5"><div class="err" data-for="cp"></div></div>
+      <div class="sub">Información adicional</div>
+      <div class="field"><label for="nacionalidad">Nacionalidad <span class="req">*</span></label><input id="nacionalidad" list="nacs" value="MEXICANA"><div class="err" data-for="nacionalidad"></div></div>
+      <div class="field"><label for="curp">CURP (solo mexicanos) <span class="req">*</span></label><input id="curp" maxlength="18" placeholder="Extranjeros: NO APLICA"><div class="err" data-for="curp"></div></div>
+      <div class="field"><label for="estadoNac">Estado de nacimiento <span class="req">*</span></label><input id="estadoNac" list="estadosList"><div class="err" data-for="estadoNac"></div></div>
+      <div class="field"><label for="sangre">Tipo de sangre <span class="req">*</span></label><select id="sangre"></select><div class="err" data-for="sangre"></div></div>
+      <div class="field"><label for="enfermedades">Enfermedades crónicas <span class="req">*</span></label><input id="enfermedades" placeholder="NINGUNA"><div class="err" data-for="enfermedades"></div></div>
+      <div class="field"><label for="alergias">Alergias <span class="req">*</span></label><input id="alergias" placeholder="NINGUNA"><div class="err" data-for="alergias"></div></div>
+      <div class="field"><label for="emerNombre">Contacto de emergencia (nombre completo) <span class="req">*</span></label><input id="emerNombre"><div class="err" data-for="emerNombre"></div></div>
+      <div class="field"><label for="emerTel">Teléfono de emergencia <span class="req">*</span></label><input id="emerTel" inputmode="tel" maxlength="10"><div class="err" data-for="emerTel"></div></div>
+    </div>
+    <datalist id="nacs"><option value="MEXICANA"></option><option value="ESTADOUNIDENSE"></option></datalist>
+    <datalist id="estadosList"></datalist>
+
+    <div id="formMsg" class="notice" hidden></div>
+    <div id="confirmBox" class="notice warn" hidden>
+      <div id="confirmText"></div>
+      <div class="actions" style="margin-top:10px"><button type="button" class="primary" id="confirmYes">Sí, registrarme</button><button type="button" id="confirmNo">Revisar otra vez</button></div>
+    </div>
+    <div class="actions"><button type="submit" class="primary" id="saveBtn">Registrarme en el equipo</button></div>
+  </form>
+</div>
+
+<script>
+(function(){
+const FORMATOS=[
+  {id:"SPTMEFO6aa060478a1b5",code:"B",name:"Relevos Varonil",cat:"SPTMCDR1788893504",male:4,female:0,adult:false},
+  {id:"SPTMEFO6aa0612259de5",code:"A",name:"Relevos Femenil",cat:"SPTMCDR1788893485",male:0,female:4,adult:false},
+  {id:"SPTMEFO6aa061d9ca4d9",code:"C",name:"Relevos Mixtos (2 mujeres + 2 hombres)",cat:"SPTMCDR1788893647",male:2,female:2,adult:false},
+  {id:"SPTMEFO6aa062aa0442c",code:"D",name:"Mixtos 3 hombres + 1 mujer (18+)",cat:"SPTMCDR1788893659",male:3,female:1,adult:true},
+  {id:"SPTMEFO6aa06374934c9",code:"D",name:"Mixtos 3 mujeres + 1 hombre (18+)",cat:"SPTMCDR1788893659",male:1,female:3,adult:true}
+];
+const TEAM_IDS=["equipo1","equipo2"];
+const PORTAL="https://inscripciones.marcate.network/equipos/paso1/SPTMCAR1786651665";
+const ESTADOS=["AGUASCALIENTES","BAJA CALIFORNIA","BAJA CALIFORNIA SUR","CAMPECHE","CHIAPAS","CHIHUAHUA","COAHUILA","COLIMA","CIUDAD DE MÉXICO","DURANGO","ESTADO DE MÉXICO","GUANAJUATO","GUERRERO","HIDALGO","JALISCO","MICHOACÁN","MORELOS","NAYARIT","NUEVO LEÓN","OAXACA","PUEBLA","QUERÉTARO","QUINTANA ROO","SAN LUIS POTOSÍ","SINALOA","SONORA","TABASCO","TAMAULIPAS","TLAXCALA","VERACRUZ","YUCATÁN","ZACATECAS"];
+const MESES=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+const SANGRE=["A+","A-","B+","B-","AB+","AB-","O+","O-"];
+const ESTATUS={pendiente:"Capturando",registrado:"Registrado en portal",pagado:"Pagado"};
+const KEYS=["nombre","paterno","materno","sexo","anio","mes","dia","telefono","correo","estado","cp","nacionalidad","curp","estadoNac","sangre","enfermedades","alergias","emerNombre","emerTel"];
+const UPPER=new Set(["nombre","paterno","materno","nacionalidad","curp","estadoNac","enfermedades","alergias","emerNombre"]);
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtOf=id=>FORMATOS.find(f=>f.id===id);
+const sexoTxt=s=>s==="female"?"Mujer":s==="male"?"Hombre":"";
+function opts(list,ph){return `<option value="">${ph}</option>`+list.map(v=>Array.isArray(v)?`<option value="${esc(v[0])}">${esc(v[1])}</option>`:`<option value="${esc(v)}">${esc(v)}</option>`).join("")}
+function edad(m){const t=new Date();let e=t.getFullYear()-+m.anio;const mm=+m.mes-1,dd=+m.dia;if(t.getMonth()<mm||(t.getMonth()===mm&&t.getDate()<dd))e--;return e}
+function msg(el,kind,html){el.className="notice "+kind;el.innerHTML=html;el.hidden=!html}
+
+/* selects estáticos */
+const years=[];for(let y=2013;y>=1910;y--)years.push(String(y));
+$("#anio").innerHTML=opts(years,"Año");
+$("#mes").innerHTML=opts(MESES.map((m,i)=>[String(i+1).padStart(2,"0"),m]),"Mes");
+$("#dia").innerHTML=opts(Array.from({length:31},(_,i)=>String(i+1).padStart(2,"0")),"Día");
+$("#estado").innerHTML=opts(ESTADOS,"Selecciona…");
+$("#sangre").innerHTML=opts(SANGRE,"Selecciona…");
+$("#estadosList").innerHTML=ESTADOS.map(e=>`<option value="${e}"></option>`).join("")+'<option value="EXTRANJERO"></option>';
+
+/* ---------- estado ---------- */
+let db=null,uid=null,isOwner=false;
+let teams={},lugares=[],registros={},myLugar=null,myRegistro=null,pending=null;
+
+/* ---------- borrador local ---------- */
+const DRAFT="relevos-gdl-borrador-v2";
+function readForm(){const o={equipoId:(document.querySelector('input[name="equipoPick"]:checked')||{}).value||""};KEYS.forEach(k=>{let v=($("#"+k).value||"").trim();if(UPPER.has(k))v=v.toUpperCase();if(k==="correo")v=v.toLowerCase();o[k]=v});o.correo2=($("#correo2").value||"").trim().toLowerCase();return o}
+let dt;function saveDraft(){try{const d=readForm();delete d.equipoId;localStorage.setItem(DRAFT,JSON.stringify(d))}catch(e){}}
+$("#form").addEventListener("input",()=>{clearTimeout(dt);dt=setTimeout(saveDraft,600)});
+try{const d=JSON.parse(localStorage.getItem(DRAFT)||"null");if(d){KEYS.concat("correo2").forEach(k=>{if(d[k]&&$("#"+k))$("#"+k).value=d[k]})}}catch(e){}
+
+/* ---------- vistas del integrante ---------- */
+function teamMembers(tid){return lugares.filter(l=>l.data.equipoId===tid).sort((a,b)=>String(a.data.creado).localeCompare(String(b.data.creado)))}
+function renderPicks(){
+  const cfg=TEAM_IDS.map(id=>teams[id]).filter(t=>t&&t.nombre&&t.formatoId);
+  if(!cfg.length){$("#picks").innerHTML='<div class="empty wide">El organizador todavía no ha creado los equipos. Vuelve a abrir este enlace más tarde.</div>';$("#saveBtn").disabled=true;return}
+  $("#saveBtn").disabled=false;
+  const cur=(document.querySelector('input[name="equipoPick"]:checked')||{}).value;
+  $("#picks").innerHTML=cfg.map(t=>{const f=fmtOf(t.formatoId),ms=teamMembers(t.id),full=ms.length>=4;
+    const fem=ms.filter(m=>m.data.sexo==="female").length,mal=ms.length-fem;
+    const needF=Math.max(0,f.female-fem),needM=Math.max(0,f.male-mal);
+    const need=full?"Equipo completo":[needF?`${needF} mujer${needF>1?"es":""}`:"",needM?`${needM} hombre${needM>1?"s":""}`:""].filter(Boolean).join(" y ")+" por registrar";
+    return `<label class="pick${full?" full":""}" for="pick-${t.id}"><input type="radio" name="equipoPick" id="pick-${t.id}" value="${t.id}"${full?" disabled":""}${cur===t.id&&!full?" checked":""}>
+      <span class="name">${esc(t.nombre)}</span><span class="muted" style="font-size:.9rem">Formato ${f.code} · ${esc(f.name)}</span>
+      <span class="slots">${[0,1,2,3].map(i=>`<span class="slot${ms[i]?" taken":""}">${ms[i]?String(i+1).padStart(2,"0"):"libre"}</span>`).join("")}</span>
+      <span style="font-size:.88rem;font-weight:600">${need}</span></label>`}).join("");
+}
+function renderMember(){
+  if(!uid)return;
+  if(myLugar||myRegistro){
+    const tid=(myLugar||myRegistro).equipoId,t=teams[tid];
+    $("#form").hidden=true;$("#doneBox").hidden=false;
+    $("#doneBox").innerHTML=`<h2>Ya estás registrado</h2><p>Quedaste inscrito en el equipo <b>${esc(t?.nombre||"")}</b>${myRegistro?` como <b>${esc(myRegistro.nombre)} ${esc(myRegistro.paterno)}</b>`:""}. Tu registro ya no se puede cambiar ni repetir en otro equipo.</p><p class="muted">Si hay un error en tus datos, avisa al organizador para que libere tu lugar.</p>`;
+    return;
+  }
+  $("#doneBox").hidden=true;$("#form").hidden=false;renderPicks();
+}
+
+/* ---------- validación ---------- */
+function clearErrors(){document.querySelectorAll(".invalid").forEach(e=>e.classList.remove("invalid"));document.querySelectorAll(".err").forEach(e=>e.textContent="")}
+function validate(d){
+  clearErrors();const errs=[];
+  const bad=(id,m)=>{const el=$("#"+id);if(el)el.classList.add("invalid");const e=document.querySelector(`.err[data-for="${id}"]`);if(e&&!e.textContent)e.textContent=m;errs.push(m)};
+  if(!d.equipoId){document.querySelector('.err[data-for="equipo"]').textContent="Elige tu equipo.";errs.push("Elige tu equipo.")}
+  KEYS.filter(k=>!["anio","mes","dia"].includes(k)).forEach(k=>{if(!d[k])bad(k,"Este campo es obligatorio.")});
+  if(!d.correo2)bad("correo2","Este campo es obligatorio.");
+  if(!d.anio||!d.mes||!d.dia)bad("anio","Completa la fecha de nacimiento.");
+  else if(new Date(+d.anio,+d.mes-1,+d.dia).getMonth()!==+d.mes-1)bad("anio","Esa fecha no existe.");
+  if(d.correo&&!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.correo))bad("correo","El email no es válido.");
+  if(d.correo&&d.correo2&&d.correo!==d.correo2)bad("correo2","Los emails no coinciden.");
+  ["telefono","emerTel"].forEach(k=>{if(d[k]&&!/^\d{10}$/.test(d[k]))bad(k,"Debe tener 10 dígitos.")});
+  if(d.cp&&!/^\d{5}$/.test(d.cp))bad("cp","Debe tener 5 dígitos.");
+  if(d.nacionalidad==="MEXICANA"&&d.curp&&!/^[A-Z][AEIOUX][A-Z]{2}\d{6}[HM][A-Z]{5}[A-Z\d]\d$/.test(d.curp))bad("curp","La CURP no tiene un formato válido (18 caracteres).");
+  if(d.equipoId&&d.sexo&&d.anio&&!errs.length){
+    const t=teams[d.equipoId],f=fmtOf(t.formatoId),ms=teamMembers(d.equipoId);
+    if(ms.length>=4)errs.push("Ese equipo ya está completo.");
+    const same=ms.filter(m=>m.data.sexo===d.sexo).length,cupo=d.sexo==="female"?f.female:f.male;
+    if(same>=cupo)errs.push(`El equipo ${t.nombre} ya no tiene lugar para ${d.sexo==="female"?"mujeres":"hombres"} (formato ${f.code}: ${f.female} mujer(es) y ${f.male} hombre(s)).`);
+    if(f.adult&&edad(d)<18)errs.push("Este formato exige que todos los integrantes sean mayores de 18 años.");
+  }
+  return errs;
+}
+
+$("#form").addEventListener("change",e=>{if(e.target.name==="equipoPick"){const e2=document.querySelector('.err[data-for="equipo"]');e2.textContent=""}});
+$("#form").addEventListener("submit",e=>{
+  e.preventDefault();$("#confirmBox").hidden=true;
+  const d=readForm(),errs=validate(d);
+  if(errs.length){msg($("#formMsg"),"bad",`<b>Revisa ${errs.length===1?"este dato":"estos datos"}:</b><ul>${[...new Set(errs)].slice(0,10).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`);const f=document.querySelector(".invalid");if(f)f.focus();return}
+  if(!db||!uid){msg($("#formMsg"),"bad","No se puede guardar desde esta vista. Abre el enlace con tu sesión de claude.ai iniciada.");return}
+  msg($("#formMsg"),"ok","");pending=d;
+  $("#confirmText").innerHTML=`Te vas a registrar en el equipo <b>${esc(teams[d.equipoId].nombre)}</b>. Después de confirmar ya no podrás cambiar tus datos ni registrarte en otro equipo. ¿Los datos son correctos?`;
+  $("#confirmBox").hidden=false;$("#confirmYes").focus();
+});
+$("#confirmNo").onclick=()=>{$("#confirmBox").hidden=true;pending=null};
+$("#confirmYes").onclick=async()=>{
+  const d=pending;if(!d)return;$("#confirmBox").hidden=true;$("#saveBtn").disabled=true;
+  try{
+    const fresh=await db.collection("lugares").where("equipoId","==",d.equipoId).get();
+    lugares=lugares.filter(l=>l.data.equipoId!==d.equipoId).concat(fresh.docs.map(x=>({id:x.id,data:x.data()})));
+    const errs=validate(d);if(errs.length){msg($("#formMsg"),"bad",esc(errs[0]));renderPicks();return}
+    const now=new Date().toISOString();const reg={...d,creado:now};delete reg.correo2;
+    await db.doc(`registros/${uid}`).set(reg);
+    await db.doc(`lugares/${uid}`).set({equipoId:d.equipoId,sexo:d.sexo,creado:now});
+    try{localStorage.removeItem(DRAFT)}catch(e){}
+    myRegistro=reg;myLugar={equipoId:d.equipoId};renderMember();
+  }catch(err){msg($("#formMsg"),"bad",err&&err.code==="invalid_argument"?"Tu acceso no permite guardar. Pide al organizador que te comparta la página como Colaborador.":"No se pudo guardar tu registro. Revisa tu conexión e inténtalo de nuevo.")}
+  finally{$("#saveBtn").disabled=false;pending=null}
+};
+
+/* ---------- panel del organizador ---------- */
+function renderConfig(){
+  $("#teamConfig").innerHTML=TEAM_IDS.map((id,i)=>{const t=teams[id]||{};const n=teamMembers(id).length;
+    return `<div class="team"><h3>Equipo ${i+1}</h3>
+    <div class="field"><label for="cfgName-${id}">Nombre del equipo</label><input id="cfgName-${id}" maxlength="60" value="${esc(t.nombre||"")}" placeholder="Ej. LAGUNEROS RUNNERS"></div>
+    <div class="field"><label for="cfgFmt-${id}">Formato</label><select id="cfgFmt-${id}"${n?" disabled":""}>${opts(FORMATOS.map(f=>[f.id,f.code+" · "+f.name]),"Selecciona…")}</select>${n?'<span class="muted" style="font-size:.82rem">El formato ya no se puede cambiar porque hay integrantes registrados.</span>':""}</div>
+    <div class="actions"><button type="button" class="primary" data-savecfg="${id}">Guardar equipo</button><span class="muted" data-cfgmsg="${id}" style="font-size:.9rem"></span></div></div>`}).join("");
+  TEAM_IDS.forEach(id=>{const s=$(`#cfgFmt-${id}`);if(teams[id]?.formatoId)s.value=teams[id].formatoId});
+}
+$("#teamConfig").addEventListener("click",async e=>{
+  const id=e.target.dataset.savecfg;if(!id)return;
+  const nombre=$(`#cfgName-${id}`).value.trim().toUpperCase(),formatoId=$(`#cfgFmt-${id}`).value,out=document.querySelector(`[data-cfgmsg="${id}"]`);
+  if(!nombre||!formatoId){out.textContent="Escribe el nombre y elige el formato.";return}
+  e.target.disabled=true;
+  try{await db.doc(`equipos/${id}`).set({...(teams[id]||{}),id,nombre,formatoId,estatus:teams[id]?.estatus||"pendiente",actualizado:new Date().toISOString()});out.textContent="Guardado."}
+  catch(err){out.textContent="No se pudo guardar. Inténtalo de nuevo."}
+  finally{e.target.disabled=false}
+});
+
+function orderedMembers(tid){
+  const t=teams[tid]||{},ms=teamMembers(tid).map(l=>({uid:l.id,lugar:l.data,reg:registros[l.id]}));
+  const ci=ms.findIndex(m=>m.uid===t.capitanUid);if(ci>0)ms.unshift(ms.splice(ci,1)[0]);
+  return ms;
+}
+function teamProblems(tid){
+  const t=teams[tid],f=t&&fmtOf(t.formatoId),ms=orderedMembers(tid),p=[];
+  if(!f)return["Configura el nombre y el formato del equipo."];
+  if(ms.length<4)p.push(`Faltan ${4-ms.length} integrante(s).`);
+  if(ms.some(m=>!m.reg))p.push("Hay un lugar sin datos completos.");
+  const fem=ms.filter(m=>m.lugar.sexo==="female").length;
+  if(ms.length===4&&(fem!==f.female||4-fem!==f.male))p.push(`La composición no cumple el formato ${f.code}.`);
+  if(f.adult&&ms.some(m=>m.reg&&edad(m.reg)<18))p.push("Hay integrantes menores de 18 años.");
+  if(new Set(ms.map(m=>m.reg?.correo)).size<ms.length)p.push("Dos integrantes tienen el mismo email; el portal lo puede rechazar.");
+  return p;
+}
+function renderOwnerTeams(){
+  $("#ownerTeams").innerHTML=TEAM_IDS.map((id,i)=>{const t=teams[id];if(!t?.nombre)return `<div class="team"><h3>Equipo ${i+1}</h3><div class="empty">Configura este equipo arriba para que los integrantes puedan elegirlo.</div></div>`;
+    const f=fmtOf(t.formatoId),ms=orderedMembers(id),probs=teamProblems(id),ready=!probs.length;
+    const rows=ms.map((m,k)=>{const r=m.reg||{};return `<tr><td><span class="bib">${String(k+1).padStart(2,"0")}</span></td><td>${r.nombre?esc(r.nombre+" "+r.paterno+" "+(r.materno||"")):'<span class="chip warn">Sin datos</span>'}</td><td>${sexoTxt(m.lugar.sexo)}</td><td class="num">${r.anio?edad(r):""}</td><td>${esc(r.correo||"")}</td>
+      <td><label style="display:flex;gap:6px;align-items:center;text-transform:none;letter-spacing:0;font-weight:600;color:var(--fg)"><input type="radio" name="cap-${id}" data-cap="${id}" value="${m.uid}" style="width:auto"${k===0?" checked":""}>Capitán</label></td>
+      <td><button type="button" class="link" data-free="${m.uid}" data-team="${id}">Liberar lugar</button></td></tr>`}).join("");
+    return `<div class="team">
+      <div class="row"><div><h3>${esc(t.nombre)}</h3><span class="muted" style="font-size:.9rem">Formato ${f.code} · ${esc(f.name)}</span></div>
+        <div class="actions"><span class="chip ${ready?"ok":"warn"}">${ms.length} de 4 · ${ready?"Listo para registrar":"Incompleto"}</span>
+        <select data-status="${id}" aria-label="Estatus de ${esc(t.nombre)}" style="width:auto">${Object.keys(ESTATUS).map(k=>`<option value="${k}"${k===(t.estatus||"pendiente")?" selected":""}>${ESTATUS[k]}</option>`).join("")}</select></div></div>
+      ${ms.length?`<div class="tablebox"><table><thead><tr><th>Lugar</th><th>Nombre</th><th>Sexo</th><th>Edad</th><th>Email</th><th></th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`:'<div class="empty">Nadie se ha registrado en este equipo todavía.</div>'}
+      <div id="freeBox-${id}" class="notice bad" hidden></div>
+      ${probs.length?`<div class="notice warn"><b>Antes de registrar en Márcate:</b><ul>${probs.map(p=>`<li>${esc(p)}</li>`).join("")}</ul></div>`:""}
+      <div class="actions"><button type="button" class="primary" data-fill="${id}"${ready?"":" disabled"}>Rellenar en Márcate</button></div>
+      <div class="fill" id="fill-${id}" hidden></div>
+    </div>`}).join("");
+}
+
+/* script que se pega en la consola de Márcate */
+function buildScript(tid){
+  const t=teams[tid],f=fmtOf(t.formatoId);
+  const data={equipo:t.nombre,formato:f.id,cat:f.cat,m:orderedMembers(tid).map(x=>{const r=x.reg;return[r.nombre,r.paterno,r.materno,r.sexo,r.anio,r.mes,r.dia,r.correo,r.telefono,r.estado,r.cp,r.nacionalidad,r.curp,r.estadoNac,r.enfermedades,r.alergias,r.sangre,r.emerNombre,r.emerTel]})};
+  return `/* Relevos GDL 2026 · ${t.nombre} */(function(){var D=${JSON.stringify(data)};var J=window.jQuery;
+function S(el,v){if(!el)return false;if(el.tagName==="SELECT"){var o=[].filter.call(el.options,function(o){return o.value===v})[0]||[].filter.call(el.options,function(o){return o.text.trim().toUpperCase()===String(v).toUpperCase()})[0];if(!o)return false;el.value=o.value}else el.value=v;if(J)J(el).trigger("change");else el.dispatchEvent(new Event("change",{bubbles:true}));return true}
+function I(id){return document.getElementById(id)}var p=location.pathname,miss=[];
+if(p.indexOf("/equipos/paso1/")>-1){S(I("equipoName"),D.equipo);var r=document.querySelector('input[name="formatoDeEquipo"][value="'+D.formato+'"]');if(!r){alert("No encontré el formato del equipo en esta página.");return}r.checked=true;if(confirm("Equipo: "+D.equipo+"\\n\\nSe enviará el paso 1 y el portal apartará el lugar. Después vuelve a ejecutar este mismo script en el paso 2.\\n\\n¿Continuar?"))I("btnRegistrarEquipo").click();return}
+if(p.indexOf("/equipos/paso2/")>-1){var c=I("carreraId").value;D.m.forEach(function(m,i){var n=i+1;function F(id,v){if(!S(I(id),v))miss.push("Integrante "+n+": "+id)}
+F("nombre-"+n,m[0]);F("paterno-"+n,m[1]);F("materno-"+n,m[2]);F("sexo-"+n,m[3]);F("anio-"+n,m[4]);F("mes-"+n,m[5]);F("dia-"+n,m[6]);F("distanciaRamaId-"+c+"-"+n,D.cat);
+var mails=document.querySelectorAll('[name="correo-'+n+'"],#confirmacionCorreo-'+n);[].forEach.call(mails,function(e){S(e,m[7])});
+F("telefono-"+n,m[8]);F("estado-"+n,m[9]);F("cp-"+n,m[10]);[m[11],m[12],m[13],m[14],m[15],m[16],m[17],m[18]].forEach(function(v,k){F("valor"+(k+1)+"-"+n,v)})});
+alert(miss.length?"Faltó llenar:\\n"+miss.join("\\n")+"\\n\\nCompleta esos campos a mano.":"Listo: se llenaron los datos de los 4 integrantes.\\n\\nRevisa todo y presiona SIGUIENTE para continuar al pago.");return}
+alert("Abre la inscripción de equipos de Márcate (paso 1 o paso 2) y vuelve a ejecutar este script.")})();`;
+}
+$("#ownerTeams").addEventListener("click",async e=>{
+  const fill=e.target.dataset.fill,free=e.target.dataset.free;
+  if(fill){const box=$("#fill-"+fill);if(!box.hidden){box.hidden=true;return}
+    const code=buildScript(fill);
+    box.innerHTML=`<b>Cómo rellenar el formulario de Márcate</b>
+      <ol><li>Presiona <b>Copiar script</b>.</li>
+      <li>Abre la <a href="${PORTAL}" target="_blank" rel="noopener">inscripción de equipos en Márcate</a> (paso 1).</li>
+      <li>Presiona <code>F12</code> y entra a la pestaña <b>Consola</b>. Si Chrome te lo pide, escribe <code>allow pasting</code> y Enter.</li>
+      <li>Pega el script y presiona Enter. Llena el nombre y formato y pasa al paso 2.</li>
+      <li>En el paso 2 vuelve a pegar el mismo script en la consola y presiona Enter. Se llenan los 4 integrantes.</li>
+      <li>Revisa los datos, presiona <b>SIGUIENTE</b> y haz el pago. Luego cambia el estatus aquí a <b>Pagado</b>.</li></ol>
+      <div class="actions"><button type="button" class="primary" data-copy="${fill}">Copiar script</button><span class="muted" id="copyMsg-${fill}" style="font-size:.9rem"></span></div>
+      <textarea id="code-${fill}" readonly aria-label="Script para Márcate">${esc(code)}</textarea>
+      <p class="muted" style="font-size:.85rem">El portal da un tiempo límite para completar el paso 2. Ten el script copiado antes de empezar.</p>`;
+    box.hidden=false;return}
+  if(e.target.dataset.copy){const id=e.target.dataset.copy,ta=$("#code-"+id),out=$("#copyMsg-"+id);
+    navigator.clipboard.writeText(ta.value).then(()=>out.textContent="Copiado.",()=>{ta.focus();ta.select();out.textContent="Selecciona el texto y cópialo con Ctrl+C."});return}
+  if(free){const tid=e.target.dataset.team,box=$("#freeBox-"+tid),r=registros[free];
+    box.innerHTML=`Se borrarán los datos de <b>${esc(r?r.nombre+" "+r.paterno:"este integrante")}</b> y podrá registrarse otra vez. <div class="actions" style="margin-top:8px"><button type="button" class="danger" data-freeyes="${free}">Liberar lugar</button><button type="button" data-freeno="${tid}">Cancelar</button></div>`;box.hidden=false;return}
+  if(e.target.dataset.freeno){$("#freeBox-"+e.target.dataset.freeno).hidden=true;return}
+  if(e.target.dataset.freeyes){const u=e.target.dataset.freeyes;e.target.disabled=true;try{await db.doc(`lugares/${u}`).delete();await db.doc(`registros/${u}`).delete()}catch(err){e.target.disabled=false}}
+});
+$("#ownerTeams").addEventListener("change",async e=>{
+  const st=e.target.dataset.status,cap=e.target.dataset.cap;
+  try{if(st)await db.doc(`equipos/${st}`).update({estatus:e.target.value});if(cap)await db.doc(`equipos/${cap}`).update({capitanUid:e.target.value})}catch(err){msg($("#status"),"bad","No se pudo guardar el cambio.")}
+});
+
+/* ---------- arranque ---------- */
+function rerender(){renderMember();if(isOwner){renderConfig();renderOwnerTeams()}}
+(async()=>{
+  const [d,u]=await Promise.all([window.claude?.use?.("db"),window.claude?.use?.("user")]);
+  db=d||null;
+  if(!db){$("#form").hidden=false;renderPicks();msg($("#status"),"warn","Esta vista no puede guardar datos. Abre el enlace con tu sesión de claude.ai iniciada.");return}
+  uid=u?await u.id():null;
+  if(!uid){$("#form").hidden=false;msg($("#status"),"warn","Inicia sesión en claude.ai para registrarte.");return}
+  isOwner=!!(u&&await u.isOwner());
+  if(isOwner)$("#ownerPanel").hidden=false;
+  db.collection("equipos").onSnapshot(s=>{teams={};s.docs.forEach(x=>teams[x.id]={...x.data(),id:x.id});
+    if(isOwner&&!document.activeElement?.id?.startsWith("cfg"))renderConfig();renderMember();if(isOwner)renderOwnerTeams()},()=>{});
+  db.collection("lugares").onSnapshot(s=>{lugares=s.docs.map(x=>({id:x.id,data:x.data()}));myLugar=(lugares.find(l=>l.id===uid)||{}).data||null;renderMember();if(isOwner)renderOwnerTeams()},()=>{});
+  db.doc(`registros/${uid}`).onSnapshot(s=>{myRegistro=s.exists?s.data():null;renderMember()},()=>{});
+  if(isOwner)db.collection("registros").onSnapshot(s=>{registros={};s.docs.forEach(x=>registros[x.id]=x.data());renderOwnerTeams()},()=>{});
+  rerender();
+})();
+})();
+</script>
